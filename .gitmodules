@@ -1,0 +1,3 @@
+[submodule "clickout"]
+	path = clickout
+	url = https://github.com/artemmur/clickout
