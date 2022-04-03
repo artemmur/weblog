@@ -1,0 +1,31 @@
+services:
+  frontend:
+    image: nginx
+    ports:
+      - "80:80"
+    links:
+      - fluentd
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: nginx.access
+  fluentd:
+    build: ./clickout
+    volumes:
+      - ./fluent.conf:/fluentd/etc/fluent.conf
+    links:
+      - "clickhouse"
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+  clickhouse:
+    image: yandex/clickhouse-server
+    volumes:
+      - clickhouse:/var/lib/clickhouse
+    ports:
+      - 127.0.0.1:8123:8123
+volumes:
+  clickhouse:
